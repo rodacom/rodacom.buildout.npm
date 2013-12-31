@@ -30,3 +30,8 @@ Using a locally compiled NodeJS::
     npm_path = ${nodejs:bin_npm}
     packages = coffee-script@1.6.3
 
+Known bugs
+~~~~~~~~~~
+
+* The links generated in the 'bin' directory are not removed on uninstall.
+

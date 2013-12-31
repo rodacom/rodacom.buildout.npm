@@ -38,30 +38,32 @@ class Npm:
             installed.append(module_path)
 
             # Alter binaries shebang to use the correct node path, and link them to bin-directory
-            for binary_name in os.listdir(os.path.join(module_path, 'bin')):
-                binary_path = os.path.join(module_path, 'bin', binary_name)
-                dest_path = os.path.join(self.buildout_directory, 'bin', os.path.basename(binary_path))
+            bindir = os.path.join(module_path, 'bin')
+            if os.path.isdir(bindir):
+                for binary_name in os.listdir(bindir):
+                    binary_path = os.path.join(bindir, binary_name)
+                    dest_path = os.path.join(self.buildout_directory, 'bin', os.path.basename(binary_path))
 
-                if os.path.islink(binary_path):
-                    binary_path = os.path.realpath(binary_path)
+                    if os.path.islink(binary_path):
+                        binary_path = os.path.realpath(binary_path)
 
-                f = open(binary_path, 'r')
-                try:
-                    lines = f.readlines()
-                finally:
-                    f.close()
-
-                if re.match(r'#!.*\bnode\b', lines[0]):
-                    lines[0] = '#!%s\n' % self.node_path
-                    f = open(binary_path, 'w')
+                    f = open(binary_path, 'r')
                     try:
-                        f.writelines(lines)
+                        lines = f.readlines()
                     finally:
                         f.close()
 
-                if not os.path.exists(dest_path):
-                    os.symlink(binary_path, dest_path)
-                    installed.append(dest_path)
+                    if re.match(r'#!.*\bnode\b', lines[0]):
+                        lines[0] = '#!%s\n' % self.node_path
+                        f = open(binary_path, 'w')
+                        try:
+                            f.writelines(lines)
+                        finally:
+                            f.close()
+
+                    if not os.path.exists(dest_path):
+                        os.symlink(binary_path, dest_path)
+                        installed.append(dest_path)
 
         return installed
 
