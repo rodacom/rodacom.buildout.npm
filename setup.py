@@ -5,7 +5,7 @@ with open('README.txt') as file:
 
 setup(
     name="rodacom.buildout.npm",
-    version='0.2',
+    version='0.3',
     description='A buildout recipe to install NodeJS packages locally using npm',
     long_description=long_description,
     license='Apache Software License',

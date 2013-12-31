@@ -16,6 +16,7 @@ class Npm:
         except KeyError:
             raise zc.buildout.UserError("No 'packages' list given")
 
+    def check(self):
         if not os.path.isfile(self.npm_path):
             raise zc.buildout.UserError("Npm executable not found : %s" % self.npm_path)
 
@@ -23,6 +24,8 @@ class Npm:
             raise zc.buildout.UserError("Node executable not found : %s" % self.node_path)
 
     def install(self):
+        self.check()
+
         installed = []
 
         for package in self.packages:
