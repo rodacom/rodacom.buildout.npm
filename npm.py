@@ -7,10 +7,11 @@ import re
 
 class Npm:
     def __init__(self, buildout, name, options):
-        self.buildout_directory = buildout['buildout']['bin-directory']
+        self.buildout_directory = buildout['buildout']['directory']
+        self.bin_directory = buildout['buildout']['bin-directory']
         self.name = name
-        self.npm_path = options.get('npm_path', os.path.join(self.buildout_directory, 'bin/node'))
-        self.node_path = options.get('node_path', os.path.join(self.buildout_directory, 'bin/npm'))
+        self.npm_path = options.get('npm_path', os.path.join(self.bin_directory, 'node'))
+        self.node_path = options.get('node_path', os.path.join(self.bin_directory, 'npm'))
         try:
             self.packages = options['packages'].split()
         except KeyError:
@@ -44,7 +45,7 @@ class Npm:
                     binary_path = os.path.join(bindir, binary_name)
 
                     if os.path.isfile(binary_path) and os.access(binary_path, os.X_OK):
-                        dest_path = os.path.join(self.buildout_directory, 'bin', os.path.basename(binary_path))
+                        dest_path = os.path.join(self.bin_directory, os.path.basename(binary_path))
 
                         if os.path.islink(binary_path):
                             binary_path = os.path.realpath(binary_path)
