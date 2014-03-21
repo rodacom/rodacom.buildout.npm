@@ -5,14 +5,14 @@ with open('README.txt') as file:
 
 setup(
     name="rodacom.buildout.npm",
-    version='0.4',
+    version='0.5',
     description='A buildout recipe to install NodeJS packages locally using npm',
     long_description=long_description,
     license='Apache Software License',
     keywords='buildout zc.buildout recipe nodejs npm',
     author='Michael Lemaire',
     author_email='m.lemaire@rodacom.fr',
-    url='https://github.com/thunderk/rodacom.buildout.npm',
+    url='https://github.com/rodacom/rodacom.buildout.npm',
     py_modules=['npm'],
     install_requires=[
         'zc.buildout',

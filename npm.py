@@ -7,7 +7,7 @@ import re
 
 class Npm:
     def __init__(self, buildout, name, options):
-        self.buildout_directory = buildout['buildout']['directory']
+        self.buildout_directory = buildout['buildout']['bin-directory']
         self.name = name
         self.npm_path = options.get('npm_path', os.path.join(self.buildout_directory, 'bin/node'))
         self.node_path = options.get('node_path', os.path.join(self.buildout_directory, 'bin/npm'))
@@ -42,28 +42,30 @@ class Npm:
             if os.path.isdir(bindir):
                 for binary_name in os.listdir(bindir):
                     binary_path = os.path.join(bindir, binary_name)
-                    dest_path = os.path.join(self.buildout_directory, 'bin', os.path.basename(binary_path))
 
-                    if os.path.islink(binary_path):
-                        binary_path = os.path.realpath(binary_path)
+                    if os.path.isfile(binary_path) and os.access(binary_path, os.X_OK):
+                        dest_path = os.path.join(self.buildout_directory, 'bin', os.path.basename(binary_path))
 
-                    f = open(binary_path, 'r')
-                    try:
-                        lines = f.readlines()
-                    finally:
-                        f.close()
+                        if os.path.islink(binary_path):
+                            binary_path = os.path.realpath(binary_path)
 
-                    if re.match(r'#!.*\bnode\b', lines[0]):
-                        lines[0] = '#!%s\n' % self.node_path
-                        f = open(binary_path, 'w')
+                        f = open(binary_path, 'r')
                         try:
-                            f.writelines(lines)
+                            lines = f.readlines()
                         finally:
                             f.close()
 
-                    if not os.path.exists(dest_path):
-                        os.symlink(binary_path, dest_path)
-                        installed.append(dest_path)
+                        if re.match(r'#!.*\bnode\b', lines[0]):
+                            lines[0] = '#!%s\n' % self.node_path
+                            f = open(binary_path, 'w')
+                            try:
+                                f.writelines(lines)
+                            finally:
+                                f.close()
+
+                        if not os.path.exists(dest_path):
+                            os.symlink(binary_path, dest_path)
+                            installed.append(dest_path)
 
         return installed
 
