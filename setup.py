@@ -1,11 +1,11 @@
 from setuptools import setup
 
-with open('README.txt') as file:
+with open('README.rst') as file:
     long_description = file.read()
 
 setup(
     name="rodacom.buildout.npm",
-    version='0.5',
+    version='0.6',
     description='A buildout recipe to install NodeJS packages locally using npm',
     long_description=long_description,
     license='Apache Software License',

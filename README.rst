@@ -12,6 +12,7 @@ Options
 :packages: **required**, a list of package names to install (can specify a version with the syntax `name@version`).
 :node_path: absolute path to the `node` executable, by default the `bin/node` in buildout directory.
 :npm_path: absolute path to the `npm` executable, by default the `bin/npm` in buildout directory.
+:strip_extension: set to 'true' to strip the `.js` extension sometimes present on binaries (default is 'false').
 
 Examples
 ~~~~~~~~

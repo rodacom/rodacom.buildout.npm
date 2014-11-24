@@ -12,6 +12,7 @@ class Npm:
         self.name = name
         self.npm_path = options.get('npm_path', os.path.join(self.bin_directory, 'node'))
         self.node_path = options.get('node_path', os.path.join(self.bin_directory, 'npm'))
+        self.strip_extension = options.get('strip_extension', 'false') == 'true'
         try:
             self.packages = options['packages'].split()
         except KeyError:
@@ -45,8 +46,6 @@ class Npm:
                     binary_path = os.path.join(bindir, binary_name)
 
                     if os.path.isfile(binary_path) and os.access(binary_path, os.X_OK):
-                        dest_path = os.path.join(self.bin_directory, os.path.basename(binary_path))
-
                         if os.path.islink(binary_path):
                             binary_path = os.path.realpath(binary_path)
 
@@ -64,6 +63,9 @@ class Npm:
                             finally:
                                 f.close()
 
+                        dest_path = os.path.join(self.bin_directory, os.path.basename(binary_path))
+                        if self.strip_extension and dest_path.endswith('.js'):
+                            dest_path = dest_path[:-3]
                         if not os.path.exists(dest_path):
                             os.symlink(binary_path, dest_path)
                             installed.append(dest_path)
